@@ -12,9 +12,6 @@ class AfterConstraintTest extends TestCase
 {
     public function test_past_target_with_after_constraint_day_bases(): void
     {
-        Mail::fake();
-        Mail::assertNothingSent();
-
         $scheduler = $this->initScheduler()
             ->days(3)
             ->after(now()->subDay());
@@ -34,16 +31,17 @@ class AfterConstraintTest extends TestCase
             $scheduler->logs
         );
 
+        self::assertFalse(
+            $scheduler->isFutureAction()
+        );
+
         self::assertTrue(
-            $can
+            $this->canSend($scheduler)
         );
     }
 
     public function test_past_target_with_after_constraint_hourly_bases(): void
     {
-        Mail::fake();
-        Mail::assertNothingSent();
-
         $scheduler = $this->initScheduler()
             ->hours(3)
             ->after(now()->subHours(1));
