@@ -232,6 +232,11 @@ class MailatorSchedule extends Model
         return $this;
     }
 
+    public function isHourly(): bool
+    {
+        return $this->frequency_option === static::FREQUENCY_OPTIONS_HOURLY;
+    }
+
     public function isDaily(): bool
     {
         return $this->frequency_option === static::FREQUENCY_OPTIONS_DAILY;

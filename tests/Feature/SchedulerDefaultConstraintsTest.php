@@ -238,4 +238,42 @@ class SchedulerDefaultConstraintsTest extends TestCase
 
         Mail::assertSent(InvoiceReminderMailable::class, 2);
     }
+
+    public function test_can_send_hourly_after_target(): void
+    {
+        Mail::fake();
+        Mail::assertNothingSent();
+
+        $scheduler = MailatorSchedule::init('Invoice reminder.')
+            ->recipients([
+                'zoo@bar.com',
+            ])
+            ->mailable(
+                (new InvoiceReminderMailable())->to('foo@bar.com')
+            )
+            ->hourly()
+            ->hours(2)
+            ->after(now());
+
+        $scheduler->save();
+
+        MailatorSchedule::run();
+        Mail::assertNothingSent();
+
+        TestTime::addHour();
+        MailatorSchedule::run();
+        Mail::assertNothingSent();
+
+        TestTime::addHour();
+        MailatorSchedule::run();
+        // Run this method twice in order to check whether the email is only sent once.
+        MailatorSchedule::run();
+
+        Mail::assertSent(InvoiceReminderMailable::class, 1);
+
+        TestTime::addHour();
+        MailatorSchedule::run();
+
+        Mail::assertSent(InvoiceReminderMailable::class, 2);
+    }
 }

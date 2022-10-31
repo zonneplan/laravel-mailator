@@ -7,6 +7,7 @@ use Binarcode\LaravelMailator\Constraints\AfterConstraint;
 use Binarcode\LaravelMailator\Constraints\BeforeConstraint;
 use Binarcode\LaravelMailator\Constraints\DailyConstraint;
 use Binarcode\LaravelMailator\Constraints\Descriptionable;
+use Binarcode\LaravelMailator\Constraints\HourlyConstraint;
 use Binarcode\LaravelMailator\Constraints\ManualConstraint;
 use Binarcode\LaravelMailator\Constraints\ManyConstraint;
 use Binarcode\LaravelMailator\Constraints\NeverConstraint;
@@ -32,6 +33,7 @@ trait ConstraintsResolver
             ManualConstraint::class,
             OnceConstraint::class,
             ManyConstraint::class,
+            HourlyConstraint::class,
             DailyConstraint::class,
             WeeklyConstraint::class,
         ])
