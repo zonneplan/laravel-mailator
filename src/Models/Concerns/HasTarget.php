@@ -37,6 +37,11 @@ trait HasTarget
 
     public function scopeMailableClass($query, $class)
     {
+        if ($this->getConnection()->getDriverName() === 'mysql') {
+            // When using mysql add triple slashes @see https://www.discoverbits.in/2680/like-statement-find-substring-with-forward-slash-backslash
+            $class = addslashes($class);
+        }
+
         $query->where('mailable_class', 'LIKE', "%{$class}%");
     }
 
