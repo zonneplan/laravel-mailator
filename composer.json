@@ -44,6 +44,8 @@
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse",
         "test": "./vendor/bin/testbench package:test --parallel --no-coverage",
+        "test:phpunit:sqlite": "./vendor/bin/phpunit",
+        "test:phpunit:mysql": "DB_DRIVER=mysql ./vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
     "config": {

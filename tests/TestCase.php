@@ -4,23 +4,31 @@ namespace Binarcode\LaravelMailator\Tests;
 
 use Binarcode\LaravelMailator\LaravelMailatorServiceProvider;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Mockery as m;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Swift_Mailer;
 
 class TestCase extends Orchestra
 {
+    use DatabaseMigrations;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->loadMigrationsFrom([
-            '--database' => 'sqlite',
-            '--path' => realpath(__DIR__.DIRECTORY_SEPARATOR.'database/migrations'),
+            '--database' => 'mailator',
+            '--path' => realpath(__DIR__ . DIRECTORY_SEPARATOR . 'database/migrations'),
+        ]);
+
+        $this->loadMigrationsFrom([
+            '--database' => 'mailator',
+            '--path' => realpath(getcwd() . DIRECTORY_SEPARATOR . 'database/migrations'),
         ]);
 
         \Illuminate\Database\Eloquent\Factories\Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Binarcode\\LaravelMailator\\Tests\\database\\Factories\\'.class_basename($modelName).'Factory'
+            fn(string $modelName) => 'Binarcode\\LaravelMailator\\Tests\\database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
@@ -38,16 +46,28 @@ class TestCase extends Orchestra
 
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('database.default', 'sqlite');
+        $app['config']->set('database.default', 'mailator');
 
-        $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
+        $databaseDriver = env('DB_DRIVER', 'sqlite');
+        $databaseConfig = match ($databaseDriver) {
+            'mysql' => [
+                'driver' => 'mysql',
+                'database' => env('MYSQL_DB_DATABASE', 'mailator'),
+                'host' => env('MYSQL_DB_HOST', 'localhost'),
+                'port' => env('MYSQL_DB_PORT', '3306'),
+                'username' => env('MYSQL_DB_USERNAME', 'root'),
+                'password' => env('MYSQL_DB_PASSWORD', 'root'),
+                'charset'   => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+            ],
+            'sqlite' => [
+                'driver' => 'sqlite',
+                'database' => ':memory:',
+            ],
+            default => throw new \Error("$databaseDriver is not supported"),
+        };
 
-        include_once __DIR__.'/../database/migrations/create_mailator_tables.php.stub';
-        (new \CreateMailatorTables())->up();
+        $app['config']->set('database.connections.mailator', $databaseConfig);
     }
 
     protected function getMocks()

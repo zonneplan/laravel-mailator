@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Binarcode\LaravelMailator\Models\MailatorLog;
 use Binarcode\LaravelMailator\Models\MailatorSchedule;
 
-class CreateMailatorTables extends Migration
+return new class extends Migration
 {
     public function up()
     {
@@ -88,4 +88,12 @@ class CreateMailatorTables extends Migration
             $table->index('mail_template_id');
         });
     }
-}
+
+    public function down()
+    {
+        Schema::drop('mail_template_placeholders');
+        Schema::drop('mail_templates');
+        Schema::drop(config('mailator.logs_table', 'mailator_logs'));
+        Schema::drop(config('mailator.schedulers_table_name', 'mailator_schedulers'));
+    }
+};
