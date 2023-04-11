@@ -6,7 +6,6 @@ use Binarcode\LaravelMailator\Constraints\AfterConstraint;
 use Binarcode\LaravelMailator\Models\MailatorSchedule;
 use Binarcode\LaravelMailator\Tests\Fixtures\InvoiceReminderMailable;
 use Binarcode\LaravelMailator\Tests\TestCase;
-use Illuminate\Support\Facades\Mail;
 
 class AfterConstraintTest extends TestCase
 {
@@ -164,5 +163,4 @@ class AfterConstraintTest extends TestCase
             )
             ->after(now());
     }
-
 }
