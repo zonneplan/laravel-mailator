@@ -352,7 +352,7 @@ class MailatorSchedule extends Model
     public function shouldSend(): bool
     {
         try {
-            $this->load('logs');
+            $this->loadMissing('logs');
 
             if (! $this->configurationsPasses()) {
                 return false;
