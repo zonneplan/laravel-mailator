@@ -28,7 +28,7 @@ class TestCase extends Orchestra
         ]);
 
         \Illuminate\Database\Eloquent\Factories\Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'Binarcode\\LaravelMailator\\Tests\\database\\Factories\\' . class_basename($modelName) . 'Factory'
+            fn (string $modelName) => 'Binarcode\\LaravelMailator\\Tests\\database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
@@ -57,7 +57,7 @@ class TestCase extends Orchestra
                 'port' => env('MYSQL_DB_PORT', '3306'),
                 'username' => env('MYSQL_DB_USERNAME', 'root'),
                 'password' => env('MYSQL_DB_PASSWORD', 'root'),
-                'charset'   => 'utf8',
+                'charset' => 'utf8',
                 'collation' => 'utf8_unicode_ci',
             ],
             'sqlite' => [
